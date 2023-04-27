@@ -267,12 +267,12 @@ const Home: React.FC = () => {
 			</div>
 			<input
 				type="text"
-				className="bg-gray-700 text-white w-full p-2 rounded mr-4 focus:outline-none focus:ring-2 focus:ring-gray-600"
+				className="bg-gray-700 text-white md:hidden w-full p-2 rounded mr-4 focus:outline-none focus:ring-2 focus:ring-gray-600"
 				placeholder="Enter markdown name..."
 				value={markdownName}
 				onChange={handleNameChange}
 			/>
-			<div className="flex flex-1 h-full">
+			<div className="flex h-full flex-col md:flex-row">
 				<textarea
 					className="flex-1 h-full p-4 bg-gray-100 border-r border-gray-300 resize-none focus:outline-none"
 					placeholder="Enter your markdown here..."

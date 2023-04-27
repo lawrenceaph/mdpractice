@@ -178,6 +178,7 @@ const Home: React.FC = () => {
 			</div>
 
 			{/* mobile nav */}
+
 			<div className=" justify-between items-center flex md:hidden bg-blue-500 p-4">
 				<div className="hidden md:flex">
 					{/* Place the existing navbar buttons here */}
@@ -264,7 +265,13 @@ const Home: React.FC = () => {
 					</button>
 				</div>
 			</div>
-
+			<input
+				type="text"
+				className="bg-gray-700 text-white w-full p-2 rounded mr-4 focus:outline-none focus:ring-2 focus:ring-gray-600"
+				placeholder="Enter markdown name..."
+				value={markdownName}
+				onChange={handleNameChange}
+			/>
 			<div className="flex flex-1 h-full">
 				<textarea
 					className="flex-1 h-full p-4 bg-gray-100 border-r border-gray-300 resize-none focus:outline-none"

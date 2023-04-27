@@ -10,7 +10,7 @@ const Home: React.FC = () => {
 	const [showModal, setShowModal] = useState<boolean>(false);
 	const [showCloseModal, setShowCloseModal] = useState<boolean>(false);
 	const [showNewModal, setShowNewModal] = useState<boolean>(false);
-	const [autosaveEnabled, setAutosaveEnabled] = useState<boolean>(false);
+	const [autosaveEnabled, setAutosaveEnabled] = useState<boolean>(true);
 	const [showOverwriteModal, setShowOverwriteModal] = useState<boolean>(false);
 	const [openedFilename, setOpenedFilename] = useState<string | null>(null);
 	const [show, setShow] = useState(false);

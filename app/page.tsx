@@ -3,18 +3,23 @@ import { useState, ChangeEvent, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import autoAnimate from "@formkit/auto-animate";
 const Home: React.FC = () => {
-	const [markdownInput, setMarkdownInput] = useState<string>(`
-  # Markdown 
-
-## This is a heading 2 (h2).
-
-#ThisIsAHashtag
-
->This is a block quote
-
-    This is a code block
-    Four spaces before the first character
-    of a line will produce the code block
+	const [markdownInput, setMarkdownInput] = useState<string>(` 
+# Markdown 
+  
+## This is an H2 heading (h2 element).
+  
+  #ThisIsAHashtag
+  
+  >This is a block quote
+  
+	  This is a code block
+	  Four spaces before the first character
+	  of a line will produce the code block
+  
+  [This is a link to the markdown guide](https://www.markdownguide.org/).  Links are set up by square brackets for the text, and the URL in parenthesis. 
+  
+  
+  
 
 `);
 	const [markdownName, setMarkdownName] = useState<string>("");

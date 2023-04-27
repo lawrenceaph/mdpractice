@@ -1,7 +1,7 @@
 "use client";
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, ChangeEvent, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-
+import autoAnimate from "@formkit/auto-animate";
 const Home: React.FC = () => {
 	const [markdownInput, setMarkdownInput] = useState<string>("");
 	const [markdownName, setMarkdownName] = useState<string>("");
@@ -13,6 +13,12 @@ const Home: React.FC = () => {
 	const [autosaveEnabled, setAutosaveEnabled] = useState<boolean>(false);
 	const [showOverwriteModal, setShowOverwriteModal] = useState<boolean>(false);
 	const [openedFilename, setOpenedFilename] = useState<string | null>(null);
+	const [show, setShow] = useState(false);
+	const parent = useRef(null);
+	useEffect(() => {
+		parent.current && autoAnimate(parent.current);
+	}, [parent]);
+	const reveal = () => setShow(!show);
 
 	useEffect(() => {
 		const loadMarkdown = localStorage.getItem("markdown-" + markdownName);
@@ -270,111 +276,113 @@ const Home: React.FC = () => {
 					<ReactMarkdown className="prose">{markdownInput}</ReactMarkdown>
 				</div>
 			</div>
-			{showModal && (
-				<div className="fixed inset-0 z-10 flex items-center justify-center p-4 bg-black bg-opacity-50">
-					<div className="bg-white p-8 rounded-md max-w-[100vw]">
-						<h2 className="text-xl mb-4">Select a file to load</h2>
-						<ul>
-							{savedFiles.map((file, index) => (
-								<li key={index} className="mb-2">
-									<button
-										className="text-blue-500 hover:text-blue-600"
-										onClick={() => loadFile(file)}
-									>
-										{file}
-									</button>
-								</li>
-							))}
-						</ul>
-						<button
-							className="bg-red-500 hover:bg-red-600 px-4 py-2 mt-4 focus:outline-none focus:ring-2 focus:ring-red-300"
-							onClick={closeModal}
-						>
-							Close
-						</button>
+			<div ref={parent}>
+				{showModal && (
+					<div className="fixed inset-0 z-10 flex items-center justify-center p-4 bg-black bg-opacity-50">
+						<div className="bg-white p-8 rounded-md max-w-[100vw]">
+							<h2 className="text-xl mb-4">Select a file to load</h2>
+							<ul>
+								{savedFiles.map((file, index) => (
+									<li key={index} className="mb-2">
+										<button
+											className="text-blue-500 hover:text-blue-600"
+											onClick={() => loadFile(file)}
+										>
+											{file}
+										</button>
+									</li>
+								))}
+							</ul>
+							<button
+								className="bg-red-500 hover:bg-red-600 px-4 py-2 mt-4 focus:outline-none focus:ring-2 focus:ring-red-300"
+								onClick={closeModal}
+							>
+								Close
+							</button>
+						</div>
 					</div>
-				</div>
-			)}
-			{showCloseModal && (
-				<div className="fixed inset-0 z-10 flex items-center justify-center p-4 bg-black bg-opacity-50">
-					<div className="bg-white p-8 rounded-md">
-						<h2 className="text-xl mb-4">
-							Are you sure you want to close the file?
-						</h2>
-						<button
-							className="bg-red-500 hover:bg-red-600 px-4 py-2 mr-4 focus:outline-none focus:ring-2 focus:ring-red-300"
-							onClick={() => {
-								closeCloseModal();
-								resetAppState();
-							}}
-						>
-							Yes
-						</button>
-						<button
-							className="bg-blue-500 hover:bg-blue-600 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
-							onClick={closeCloseModal}
-						>
-							No
-						</button>
+				)}
+				{showCloseModal && (
+					<div className="fixed inset-0 z-10 flex items-center justify-center p-4 bg-black bg-opacity-50">
+						<div className="bg-white p-8 rounded-md">
+							<h2 className="text-xl mb-4">
+								Are you sure you want to close the file?
+							</h2>
+							<button
+								className="bg-red-500 hover:bg-red-600 px-4 py-2 mr-4 focus:outline-none focus:ring-2 focus:ring-red-300"
+								onClick={() => {
+									closeCloseModal();
+									resetAppState();
+								}}
+							>
+								Yes
+							</button>
+							<button
+								className="bg-blue-500 hover:bg-blue-600 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
+								onClick={closeCloseModal}
+							>
+								No
+							</button>
+						</div>
 					</div>
-				</div>
-			)}
-			{showNewModal && (
-				<div className="fixed inset-0 z-10 flex items-center justify-center p-4 bg-black bg-opacity-50">
-					<div className="bg-white p-8 rounded-md">
-						<h2 className="text-xl mb-4">
-							Do you want to save the current file before creating a new file?
-						</h2>
-						<button
-							className="bg-green-500 hover:bg-green-600 px-4 py-2 mr-4 focus:outline-none focus:ring-2 focus:ring-green-300"
-							onClick={() => {
-								saveMarkdown();
-								closeNewModal();
-								resetAppState();
-							}}
-						>
-							Yes
-						</button>
-						<button
-							className="bg-red-500 hover:bg-red-600 px-4 py-2 mr-4 focus:outline-none focus:ring-2 focus:ring-red-300"
-							onClick={() => {
-								closeNewModal();
-								resetAppState();
-							}}
-						>
-							No
-						</button>
-						<button
-							className="bg-blue-500 hover:bg-blue-600 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
-							onClick={closeNewModal}
-						>
-							Cancel
-						</button>
+				)}
+				{showNewModal && (
+					<div className="fixed inset-0 z-10 flex items-center justify-center p-4 bg-black bg-opacity-50">
+						<div className="bg-white p-8 rounded-md">
+							<h2 className="text-xl mb-4">
+								Do you want to save the current file before creating a new file?
+							</h2>
+							<button
+								className="bg-green-500 hover:bg-green-600 px-4 py-2 mr-4 focus:outline-none focus:ring-2 focus:ring-green-300"
+								onClick={() => {
+									saveMarkdown();
+									closeNewModal();
+									resetAppState();
+								}}
+							>
+								Yes
+							</button>
+							<button
+								className="bg-red-500 hover:bg-red-600 px-4 py-2 mr-4 focus:outline-none focus:ring-2 focus:ring-red-300"
+								onClick={() => {
+									closeNewModal();
+									resetAppState();
+								}}
+							>
+								No
+							</button>
+							<button
+								className="bg-blue-500 hover:bg-blue-600 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
+								onClick={closeNewModal}
+							>
+								Cancel
+							</button>
+						</div>
 					</div>
-				</div>
-			)}
-			{showOverwriteModal && (
-				<div className="fixed inset-0 z-10 flex items-center justify-center p-4 bg-black bg-opacity-50">
-					<div className="bg-white p-8 rounded-md">
-						<h2 className="text-xl mb-4">
-							A file with the same name already exists. Do you want to overwrite
-							it?
-						</h2>
-						<button
-							className="bg-red-500 hover:bg-red-600 px-4 py-2 mr-4 focus:outline-none focus:ring-2 focus:ring-red-300"
-							onClick={overwriteFile}
-						>
-							Yes
-						</button>
-						<button
-							className="bg-blue-500 hover:bg-blue-600 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
-							onClick={closeOverwriteModal}
-						>
-							No
-						</button>
+				)}
+				{showOverwriteModal && (
+					<div className="fixed inset-0 z-10 flex items-center justify-center p-4 bg-black bg-opacity-50">
+						<div className="bg-white p-8 rounded-md">
+							<h2 className="text-xl mb-4">
+								A file with the same name already exists. Do you want to
+								overwrite it?
+							</h2>
+							<button
+								className="bg-red-500 hover:bg-red-600 px-4 py-2 mr-4 focus:outline-none focus:ring-2 focus:ring-red-300"
+								onClick={overwriteFile}
+							>
+								Yes
+							</button>
+							<button
+								className="bg-blue-500 hover:bg-blue-600 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
+								onClick={closeOverwriteModal}
+							>
+								No
+							</button>
+						</div>
 					</div>
-				</div>
-			)}
+				)}{" "}
+			</div>
 		</div>
 	);
 };

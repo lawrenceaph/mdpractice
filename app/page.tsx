@@ -11,12 +11,32 @@ const Home: React.FC = () => {
 	const [showCloseModal, setShowCloseModal] = useState<boolean>(false);
 	const [showNewModal, setShowNewModal] = useState<boolean>(false);
 	const [autosaveEnabled, setAutosaveEnabled] = useState<boolean>(false);
+	const [showOverwriteModal, setShowOverwriteModal] = useState<boolean>(false);
+	const [openedFilename, setOpenedFilename] = useState<string | null>(null);
+
 	useEffect(() => {
 		const loadMarkdown = localStorage.getItem("markdown-" + markdownName);
 		if (loadMarkdown) {
 			setMarkdownInput(loadMarkdown);
 		}
 	}, [markdownName]);
+	const openOverwriteModal = (): void => {
+		setShowOverwriteModal(true);
+	};
+
+	const closeOverwriteModal = (): void => {
+		setShowOverwriteModal(false);
+	};
+	const overwriteFile = (): void => {
+		localStorage.setItem("markdown-" + markdownName, markdownInput);
+		setSavedStatus("Saved successfully!");
+		setTimeout(() => setSavedStatus(""), 3000);
+		if (!savedFiles.includes(markdownName)) {
+			setSavedFiles([...savedFiles, markdownName]);
+		}
+		closeOverwriteModal();
+	};
+
 	useEffect(() => {
 		if (autosaveEnabled && markdownName) {
 			const autosaveInterval = setInterval(() => {
@@ -66,12 +86,23 @@ const Home: React.FC = () => {
 	const handleNameChange = (event: ChangeEvent<HTMLInputElement>): void => {
 		setMarkdownName(event.target.value);
 	};
-
 	const saveMarkdown = (): void => {
-		localStorage.setItem("markdown-" + markdownName, markdownInput);
-		setSavedStatus("Saved successfully!");
-		setTimeout(() => setSavedStatus(""), 3000);
-		setSavedFiles([...savedFiles, markdownName]);
+		if (openedFilename === markdownName) {
+			// Save without prompting if the user is saving the opened file
+			localStorage.setItem("markdown-" + markdownName, markdownInput);
+			setSavedStatus("Saved successfully!");
+			setTimeout(() => setSavedStatus(""), 3000);
+			return;
+		}
+
+		if (savedFiles.includes(markdownName)) {
+			openOverwriteModal();
+		} else {
+			localStorage.setItem("markdown-" + markdownName, markdownInput);
+			setSavedStatus("Saved successfully!");
+			setTimeout(() => setSavedStatus(""), 3000);
+			setSavedFiles([...savedFiles, markdownName]);
+		}
 	};
 
 	const openModal = (): void => {
@@ -318,6 +349,28 @@ const Home: React.FC = () => {
 							onClick={closeNewModal}
 						>
 							Cancel
+						</button>
+					</div>
+				</div>
+			)}
+			{showOverwriteModal && (
+				<div className="fixed inset-0 z-10 flex items-center justify-center p-4 bg-black bg-opacity-50">
+					<div className="bg-white p-8 rounded-md">
+						<h2 className="text-xl mb-4">
+							A file with the same name already exists. Do you want to overwrite
+							it?
+						</h2>
+						<button
+							className="bg-red-500 hover:bg-red-600 px-4 py-2 mr-4 focus:outline-none focus:ring-2 focus:ring-red-300"
+							onClick={overwriteFile}
+						>
+							Yes
+						</button>
+						<button
+							className="bg-blue-500 hover:bg-blue-600 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
+							onClick={closeOverwriteModal}
+						>
+							No
 						</button>
 					</div>
 				</div>

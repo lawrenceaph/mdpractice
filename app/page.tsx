@@ -118,7 +118,7 @@ const Home: React.FC = () => {
 				</button>
 				<span className="text-green-400">{savedStatus}</span>
 				<button
-					className="bg-gray-500  rounded ml-2 hover:bg-gray-600 px-4 py-2 mr-4 focus:outline-none focus:ring-2 focus:ring-gray-300"
+					className="bg-gray-500  rounded ml-4 hover:bg-gray-600 px-4 py-2 mr-4 focus:outline-none focus:ring-2 focus:ring-gray-300"
 					onClick={openCloseModal}
 				>
 					Close File

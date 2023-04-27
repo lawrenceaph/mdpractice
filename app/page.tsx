@@ -59,7 +59,7 @@ const Home: React.FC = () => {
 	useEffect(() => {
 		if (autosaveEnabled && markdownName) {
 			const autosaveInterval = setInterval(() => {
-				saveMarkdown();
+				autoSaveMarkdown();
 			}, 60000); // Autosave every minute (60000 ms)
 
 			return () => {
@@ -85,6 +85,14 @@ const Home: React.FC = () => {
 
 	const openNewModal = (): void => {
 		setShowNewModal(true);
+	};
+	const autoSaveMarkdown = (): void => {
+		if (openedFilename === markdownName) {
+			localStorage.setItem("markdown-" + markdownName, markdownInput);
+		} else if (!savedFiles.includes(markdownName)) {
+			localStorage.setItem("markdown-" + markdownName, markdownInput);
+			setSavedFiles([...savedFiles, markdownName]);
+		}
 	};
 
 	const closeNewModal = (): void => {
